@@ -40,7 +40,7 @@ API en `http://localhost:8000`. Docs en `/docs`.
 
 ## Frontend
 
-[interinos-frontend](https://github.com/REPLACE_ME/interinos-frontend) — Vite + React + TypeScript + Leaflet.
+[interinos-frontend](https://github.com/gcinc91/interinos-frontend) — Vite + React + TypeScript + Leaflet.
 
 ## Licencia
 
