@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: interinos-backend
+    runtime: docker
+    plan: free
+    region: frankfurt
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false
+      - key: SIPRI_BASE_URL
+        value: https://sipri.juntadeandalucia.es
+      - key: NOMINATIM_BASE_URL
+        value: https://nominatim.openstreetmap.org
+      - key: OSRM_BASE_URL
+        value: https://router.project-osrm.org
+      - key: USER_AGENT
+        value: InterinosBot/1.0 (+https://github.com/gcinc91/interinos-backend)
+      - key: LOG_LEVEL
+        value: INFO
+      - key: SCRAPE_CRON
+        value: "0 */6 * * *"

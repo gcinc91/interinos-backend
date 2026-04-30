@@ -12,9 +12,8 @@ dist/
 venv/
 ENV/
 
-# uv
+# uv (commit uv.lock para builds reproducibles)
 .venv/
-uv.lock
 
 # Tests / coverage
 .pytest_cache/
