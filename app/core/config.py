@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     ADMIN_TOKEN: str = "change-me"
     LOG_LEVEL: str = "INFO"
     SCRAPE_CRON: str = "0 */6 * * *"
+    ENABLE_SCHEDULER: bool = True
+    SCHEDULER_TIMEZONE: str = "Europe/Madrid"
 
     @property
     def cors_origins(self) -> list[str]:

@@ -4,18 +4,26 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import distance, geocode, health, vacancies
+from app.api import admin, distance, geocode, health, vacancies
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
+from app.scheduler.jobs import start_scheduler, stop_scheduler
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     configure_logging()
+    settings = get_settings()
     log = get_logger("startup")
-    log.info("app_started")
-    yield
-    log.info("app_stopped")
+    if settings.ENABLE_SCHEDULER:
+        start_scheduler()
+    log.info("app_started", scheduler_enabled=settings.ENABLE_SCHEDULER)
+    try:
+        yield
+    finally:
+        if settings.ENABLE_SCHEDULER:
+            stop_scheduler()
+        log.info("app_stopped")
 
 
 def create_app() -> FastAPI:
@@ -32,6 +40,7 @@ def create_app() -> FastAPI:
     app.include_router(geocode.router)
     app.include_router(vacancies.router)
     app.include_router(distance.router)
+    app.include_router(admin.router)
     return app
 
 
