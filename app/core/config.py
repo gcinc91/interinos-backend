@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     OSRM_BASE_URL: str = "https://router.project-osrm.org"
     USER_AGENT: str = "InterinosBot/1.0"
     CORS_ORIGIN: str = "http://localhost:5173"
+    CORS_ORIGIN_REGEX: str | None = None
     ADMIN_TOKEN: str = "change-me"
     LOG_LEVEL: str = "INFO"
     SCRAPE_CRON: str = "0 */6 * * *"
