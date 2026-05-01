@@ -1,5 +1,7 @@
 services:
   # API web (FastAPI). Free tier: duerme tras ~15 min idle.
+  # Render free no soporta `type: cron`. El sync periódico se hace via
+  # GitHub Actions (.github/workflows/scrape.yml) llamando a /admin/scrape.
   - type: web
     name: interinos-backend
     runtime: docker
@@ -16,8 +18,8 @@ services:
         sync: false
       - key: CORS_ORIGIN_REGEX
         value: ^https://.*\.vercel\.app$
-      # Scheduler in-process apagado: el web service free duerme.
-      # El cron job separado abajo se encarga del sync periódico.
+      # In-process scheduler apagado: el web service free duerme tras
+      # 15 min idle. El cron real lo dispara GitHub Actions.
       - key: ENABLE_SCHEDULER
         value: "false"
       - key: SIPRI_BASE_URL
@@ -26,26 +28,6 @@ services:
         value: https://nominatim.openstreetmap.org
       - key: OSRM_BASE_URL
         value: https://router.project-osrm.org
-      - key: USER_AGENT
-        value: InterinosBot/1.0 (+https://github.com/gcinc91/interinos-backend)
-      - key: LOG_LEVEL
-        value: INFO
-
-  # Cron job: ejecuta UN sync de SIPRI cada 6h y termina.
-  # Usa el mismo Dockerfile pero invoca app/scheduler/run_once.py.
-  - type: cron
-    name: interinos-scrape-cron
-    runtime: docker
-    plan: free
-    region: frankfurt
-    dockerfilePath: ./Dockerfile
-    dockerCommand: python -m app.scheduler.run_once
-    schedule: "0 */6 * * *"
-    envVars:
-      - key: DATABASE_URL
-        sync: false
-      - key: SIPRI_BASE_URL
-        value: https://sipri.juntadeandalucia.es
       - key: USER_AGENT
         value: InterinosBot/1.0 (+https://github.com/gcinc91/interinos-backend)
       - key: LOG_LEVEL

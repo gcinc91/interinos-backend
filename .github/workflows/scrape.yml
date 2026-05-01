@@ -1,0 +1,33 @@
+name: scrape-sipri
+
+on:
+  schedule:
+    # Cada 6 horas (UTC). Cron de GitHub puede retrasarse minutos en alta carga.
+    - cron: "0 */6 * * *"
+  workflow_dispatch: # permite trigger manual desde la UI
+
+permissions:
+  contents: read
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Wake backend (free tier puede dormir)
+        run: |
+          curl -fsS --retry 6 --retry-delay 10 --max-time 60 \
+            "${BACKEND_URL%/}/health" || true
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+
+      - name: POST /admin/scrape
+        run: |
+          curl -fsS -X POST \
+            -H "X-Admin-Token: ${ADMIN_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --max-time 240 \
+            "${BACKEND_URL%/}/admin/scrape"
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
