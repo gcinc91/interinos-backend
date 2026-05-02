@@ -7,11 +7,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# uv binario para resolver e instalar deps reproducible
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+# uv pinned para reproducibilidad. Misma minor que la usada al generar uv.lock.
+COPY --from=ghcr.io/astral-sh/uv:0.11 /uv /usr/local/bin/uv
 
-COPY pyproject.toml uv.lock* ./
-RUN uv sync --no-dev --frozen 2>/dev/null || uv sync --no-dev
+# Layer cache: deps cambian poco
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
 
 COPY app ./app
 COPY alembic ./alembic
