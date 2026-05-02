@@ -138,7 +138,6 @@ class RoutingService:
                 await self._batch_cache_upsert(origin_key, upserts)
                 await self.session.commit()
 
-        # type: ignore[return-value]
         return [r for r in results if r is not None]
 
     async def _batch_cache_lookup(

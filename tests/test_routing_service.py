@@ -6,7 +6,6 @@ from pytest_httpx import HTTPXMock
 from app.schemas.distance import DistanceDestination
 from app.services.routing_service import RoutingService, haversine_km
 
-
 # --- haversine pure -------------------------------------------------------
 
 

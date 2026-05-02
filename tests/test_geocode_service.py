@@ -3,11 +3,10 @@ from unittest.mock import AsyncMock, MagicMock
 from pytest_httpx import HTTPXMock
 
 from app.services.geocode_service import (
-    NominatimClient,
     GeocodeService,
+    NominatimClient,
     normalize_address,
 )
-
 
 # --- normalize_address ----------------------------------------------------
 

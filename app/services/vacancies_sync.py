@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from geoalchemy2.elements import WKTElement
 from sqlalchemy import func, select, update
@@ -130,7 +130,7 @@ class VacanciesSync:
             )
 
     async def run(self) -> ScrapeRun:
-        started_at = datetime.now(tz=timezone.utc)
+        started_at = datetime.now(tz=UTC)
         log.info("vacancies_sync_started")
 
         try:
@@ -140,7 +140,7 @@ class VacanciesSync:
             log.exception("vacancies_sync_fetch_failed")
             run = ScrapeRun(
                 started_at=started_at,
-                finished_at=datetime.now(tz=timezone.utc),
+                finished_at=datetime.now(tz=UTC),
                 status="failed",
                 data_version="",
                 error_message=str(exc)[:500],
@@ -164,7 +164,7 @@ class VacanciesSync:
         data_version = compute_data_version(dtos)
         run = ScrapeRun(
             started_at=started_at,
-            finished_at=datetime.now(tz=timezone.utc),
+            finished_at=datetime.now(tz=UTC),
             status="success",
             items_inserted=len(diff.new),
             items_updated=len(diff.updated),

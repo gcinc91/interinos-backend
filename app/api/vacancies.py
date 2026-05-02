@@ -2,16 +2,17 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from geoalchemy2.functions import (
-    ST_DWithin,
-    ST_Distance,
-    ST_GeographyFromText,
-    ST_Intersects,
     ST_X,
     ST_Y,
+    ST_Distance,
+    ST_DWithin,
+    ST_GeographyFromText,
+    ST_Intersects,
 )
 from geoalchemy2.types import Geometry
 from sqlalchemy import cast, func, literal, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import InstrumentedAttribute
 
 from app.db.session import get_db
 from app.models import ScrapeRun, Vacancy
@@ -57,7 +58,7 @@ async def vacancies_version(
 
 @router.get("/filters", response_model=FiltersResponse)
 async def get_filters(session: AsyncSession = Depends(get_db)) -> FiltersResponse:
-    async def distinct(column) -> list[str]:
+    async def distinct(column: InstrumentedAttribute[str | None]) -> list[str]:
         result = await session.execute(
             select(column)
             .where(Vacancy.is_active.is_(True), column.isnot(None))
