@@ -23,10 +23,9 @@ jobs:
 
       - name: POST /admin/scrape
         run: |
-          curl -fsS -X POST \
+          curl -fsS --retry 6 --retry-delay 10 --retry-all-errors --max-time 240 -X POST \
             -H "X-Admin-Token: ${ADMIN_TOKEN}" \
             -H "Content-Type: application/json" \
-            --max-time 240 \
             "${BACKEND_URL%/}/admin/scrape"
         env:
           BACKEND_URL: ${{ secrets.BACKEND_URL }}
