@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     CORS_ORIGIN_REGEX: str | None = None
     ADMIN_TOKEN: str = "change-me"
     LOG_LEVEL: str = "INFO"
-    SCRAPE_CRON: str = "0 */6 * * *"
+    SCRAPE_CRON: str = "0 0 * * *"
     ENABLE_SCHEDULER: bool = True
     SCHEDULER_TIMEZONE: str = "Europe/Madrid"
 
